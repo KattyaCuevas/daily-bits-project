@@ -1,82 +1,93 @@
-import Head from 'next/head'
+import Head from "next/head";
+import Footer from "../components/footer";
+
+const categories = [
+  { name: "HTML", imageURL: "/images/html.png", userPercentage: 0.1 },
+  { name: "CSS", imageURL: "/images/css.png", userPercentage: 0.2 },
+  { name: "JS", imageURL: "/images/js.png", userPercentage: 0.7 },
+  { name: "Figma", imageURL: "/images/figma.png", userPercentage: 0.5 },
+  { name: "UX", imageURL: "/images/ux.png", userPercentage: 0 },
+];
+
+function CircleProgressBar({ id, radio, percentage, src }) {
+  const strokeDasharray = 2 * Math.PI * radio;
+  return (
+    <svg className="max-w-full max-h-full">
+      <defs>
+        <pattern
+          id={`image-${id}`}
+          x="0%"
+          y="0%"
+          height="100%"
+          width="100%"
+          viewBox="0 0 512 512"
+        >
+          <image x="56" y="56" width="400" height="400" xlinkHref={src}></image>
+        </pattern>
+      </defs>
+      <circle
+        r={radio}
+        cx="50%"
+        cy="50%"
+        fill={`url(#image-${id})`}
+        strokeDasharray={strokeDasharray}
+        stroke="#DDD"
+        strokeDashoffset="0"
+        style={{ strokeWidth: "0.5em" }}
+      ></circle>
+      <circle
+        r={radio}
+        cx="50%"
+        cy="50%"
+        fill="transparent"
+        strokeDasharray={strokeDasharray}
+        stroke="#2CB67D"
+        style={{
+          strokeDashoffset: strokeDasharray * (1 - percentage),
+          strokeWidth: "0.5em",
+          transformOrigin: "center",
+          transform: "rotate(90deg)",
+        }}
+      ></circle>
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen text-base">
       <Head>
-        <title>Create Next App</title>
+        <title>Daily Bits</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.js
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <main className="flex flex-col items-center w-full flex-1 px-20 text-center bg-gray-900 text-white pt-12">
+        <span className="mb-8 text-lg">
+          Practica tus conocimientos en la categoría que prefieras.
+        </span>
+        <div className="grid grid-cols-2 gap-8 items-center">
+          {categories.map((category, index) => (
+            <div
+              key={`${index}-${category.name}`}
+              className={
+                categories.length % 2 === 1 && index === 0 ? "col-span-2" : ""
+              }
+            >
+              <div className="w-24 h-24 rounded-full mx-auto mb-1">
+                <CircleProgressBar
+                  id={category.name}
+                  radio={43}
+                  percentage={category.userPercentage}
+                  src={category.imageURL}
+                />
+              </div>
+              {category.name}
+            </div>
+          ))}
         </div>
       </main>
 
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
-        </a>
-      </footer>
+      <Footer />
     </div>
-  )
+  );
 }
